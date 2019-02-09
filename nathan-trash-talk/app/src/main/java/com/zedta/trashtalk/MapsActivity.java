@@ -1,4 +1,4 @@
-package com.example.trashtalk;
+package com.zedta.trashtalk;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;

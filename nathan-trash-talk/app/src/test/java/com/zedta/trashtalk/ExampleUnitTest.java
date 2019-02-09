@@ -1,4 +1,4 @@
-package com.example.trashtalk;
+package com.zedta.trashtalk;
 
 import org.junit.Test;
 
