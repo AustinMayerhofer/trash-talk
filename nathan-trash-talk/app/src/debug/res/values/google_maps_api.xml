@@ -4,7 +4,7 @@
 
     To get one, follow this link, follow the directions and press "Create" at the end:
 
-    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=49:03:FD:FF:41:D4:E4:42:EF:57:44:26:90:05:CA:0B:49:8B:89:E1%3Bcom.example.trashtalk
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=49:03:FD:FF:41:D4:E4:42:EF:57:44:26:90:05:CA:0B:49:8B:89:E1%3Bcom.zedta.trashtalk
 
     You can also add your credentials to an existing key, using these values:
 
