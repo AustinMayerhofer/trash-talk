@@ -1,4 +1,4 @@
-package com.example.trashtalk;
+package com.zedta.trashtalk;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -38,9 +38,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // Add a marker in Davis and move the camera
+        LatLng davis = new LatLng(38.5449, -121.7405);
+        mMap.addMarker(new MarkerOptions().position(davis).title("Marker in Davis"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(davis));
     }
 }

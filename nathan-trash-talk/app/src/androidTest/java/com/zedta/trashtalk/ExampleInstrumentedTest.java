@@ -1,4 +1,4 @@
-package com.example.trashtalk;
+package com.zedta.trashtalk;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.trashtalk", appContext.getPackageName());
+        assertEquals("com.zedta.trashtalk", appContext.getPackageName());
     }
 }
