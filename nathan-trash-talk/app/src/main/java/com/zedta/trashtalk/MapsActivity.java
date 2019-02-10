@@ -3,6 +3,7 @@ package com.zedta.trashtalk;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,6 +30,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.security.Security;
+
 // a lot of code from: https://www.youtube.com/watch?v=4kk-dYWVNsc
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -42,6 +52,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker currentUserLocationMarker;
     private static final int Request_User_Location_Code = 99;
     private FusedLocationProviderClient mFusedLocationClient;
+    private int incrementer = 0;
+
+    // AJ CODE
+    private static final String FILE_NAME = "coordinates.txt";
+    FileOutputStream fos = null;
+    // AJ CODE
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,40 +76,107 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+    public void saveLocation(View v) {
+        try {
+
+            Location currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+            //Toast.makeText(this, currentLocation.toString(), Toast.LENGTH_SHORT).show();
+
+            fos = openFileOutput(FILE_NAME, MODE_APPEND);
+
+            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+
+            if (googleApiClient != null) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient,
+                        this);
+            }
+
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(latLng);
+            markerOptions.title("New Marker");
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+            //currentUserLocationMarker = mMap.addMarker(markerOptions);
+            // Toast.makeText(this, "Save button pressed", Toast.LENGTH_SHORT).show();
+            //Marker currentUserLocationMarker = mMap.addMarker(markerOptions);
+
+            mMap.addMarker(new MarkerOptions().position(latLng).title("New Marker"));
+
+            fos.write(latLng.toString().getBytes());
+            fos.write("\n".getBytes());
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void loadLocations(View v) {
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput(FILE_NAME);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+
+            while ((text = br.readLine()) != null) {
+
+                Toast.makeText(this, "Howdy", Toast.LENGTH_SHORT).show();
+
+                int parenthesis_index = text.indexOf('(');
+                int comma_index = text.indexOf(',');
+                String x_coord = text.substring(parenthesis_index+1, comma_index);
+                int parenthesis2_index = text.indexOf(')');
+                String y_coord = text.substring(comma_index+1, parenthesis2_index);
+                double x_coord_double = Double.parseDouble(x_coord);
+                double y_coord_double = Double.parseDouble(y_coord);
+
+
+
+                Toast.makeText(this, "x coord: " + x_coord.getBytes() + " y coord: " + y_coord.getBytes(), Toast.LENGTH_SHORT).show();
+
+                LatLng latLng = new LatLng(x_coord_double, y_coord_double);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                markerOptions.title("New Marker");
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+
+                mMap.addMarker(new MarkerOptions().position(latLng).title("New Marker"));
+            }
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Davis and move the camera
-        // LatLng davis = new LatLng(38.5449, -121.7405);
-        // mMap.addMarker(new MarkerOptions().position(davis).title("Marker in Davis"));
-        // mMap.moveCamera(CameraUpdateFactory.newLatLng(davis));
-
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            // Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
-
-            // return;
         }
     }
 
@@ -152,38 +235,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationChanged(Location location) {
         lastLocation = location;
 
-        if (currentUserLocationMarker != null) {
-            currentUserLocationMarker.remove();
-        }
-
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraPosition cameraPosition = new CameraPosition(latLng, 16, 0, 0);
+        CameraPosition cameraPosition = new CameraPosition(latLng, 18, 0, 0);
 
-        // mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        Toast.makeText(this, "Position: " + latLng.toString(), Toast.LENGTH_SHORT).show();
+
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        // mMap.animateCamera(CameraUpdateFactory.zoomBy(12));
 
         if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient,
                     this);
-            // ?? mFusedLocationClient.removeLocationUpdates(locationRequest);
-            // TODO: check documentation (old and new) for how to update this.
         }
-
-        // TODO: only run this code when user presses button
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Location");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
-        currentUserLocationMarker = mMap.addMarker(markerOptions);
     }
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(500);
-        locationRequest.setFastestInterval(500);
+        locationRequest.setInterval(1100);
+        locationRequest.setFastestInterval(1100);
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         if (ContextCompat.checkSelfPermission(this,
