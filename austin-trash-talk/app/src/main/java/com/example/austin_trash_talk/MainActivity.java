@@ -32,10 +32,9 @@ public class MainActivity extends AppCompatActivity {
         String text = mEditText.getText().toString();
 
         try {
-            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            fos.write("Test".getBytes());
-            fos.write("Test2".getBytes());
+            fos = openFileOutput(FILE_NAME, MODE_APPEND);
             fos.write(text.getBytes());
+            fos.write("\n".getBytes());
 
             mEditText.getText().clear();
             Toast.makeText(this, "Saved to " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
@@ -79,6 +78,27 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     fis.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void clear_file(View v) {
+        String text = mEditText.getText().toString();
+
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+
+            mEditText.getText().clear();
+            Toast.makeText(this, "Cleared the contents of " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch(IOException e) {
                     e.printStackTrace();
                 }
             }
