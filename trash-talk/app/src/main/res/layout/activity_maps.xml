@@ -25,5 +25,4 @@
         android:text="Load Locations"
         android:onClick="loadLocations"/>
 
-
 </fragment>
