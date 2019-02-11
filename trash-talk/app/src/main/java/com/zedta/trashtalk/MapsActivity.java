@@ -54,10 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationClient;
     private int incrementer = 0;
 
-    // AJ CODE
     private static final String FILE_NAME = "coordinates.txt";
     FileOutputStream fos = null;
-    // AJ CODE
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             while ((text = br.readLine()) != null) {
 
-                Toast.makeText(this, "Howdy", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "Howdy", Toast.LENGTH_SHORT).show();
 
                 int parenthesis_index = text.indexOf('(');
                 int comma_index = text.indexOf(',');
@@ -142,9 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 double x_coord_double = Double.parseDouble(x_coord);
                 double y_coord_double = Double.parseDouble(y_coord);
 
-
-
-                Toast.makeText(this, "x coord: " + x_coord.getBytes() + " y coord: " + y_coord.getBytes(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "x coord: " + x_coord.getBytes() + " y coord: " + y_coord.getBytes(), Toast.LENGTH_SHORT).show();
 
                 LatLng latLng = new LatLng(x_coord_double, y_coord_double);
                 MarkerOptions markerOptions = new MarkerOptions();
@@ -238,7 +234,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         CameraPosition cameraPosition = new CameraPosition(latLng, 18, 0, 0);
 
-        Toast.makeText(this, "Position: " + latLng.toString(), Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Position: " + latLng.toString(), Toast.LENGTH_SHORT).show();
 
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
