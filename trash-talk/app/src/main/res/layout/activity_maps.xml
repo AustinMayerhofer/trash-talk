@@ -14,20 +14,16 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center|bottom"
     android:layout_marginTop="8dp"
-    android:padding="8dp"
-    android:paddingRight="8dp"
     android:text="Save Location"
-    android:onClick="saveLocation"/>
+    android:onClick="saveLocation" />
 
     <Button
         android:id="@+id/loadLocations"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="left|top"
-        android:layout_marginTop="8dp"
-        android:padding="8dp"
-        android:paddingRight="8dp"
+        android:layout_gravity="start|top"
         android:text="Load Locations"
         android:onClick="loadLocations"/>
+
 
 </fragment>
